@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>YouTube Video Cache</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-4">
+    <h2 class="mb-4 text-center">🎥 YouTube Video LRU Cache</h2>
+
+    <!-- Video selection form -->
+    <form method="POST" class="mb-4">
+        <div class="input-group">
+            <label class="input-group-text" for="video_id">Select a Video</label>
+            <select class="form-select" name="video_id" required>
+                <option value="">-- Choose a video --</option>
+                {% for vid, data in video_db.items() %}
+                    <option value="{{ vid }}">{{ data.title }} ({{ data.duration }})</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary" type="submit">Watch</button>
+        </div>
+    </form>
+
+    <!-- Watched video preview -->
+    {% if watched_video %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">{{ watched_video.title }}</h5>
+                <p class="card-text">Duration: {{ watched_video.duration }}</p>
+                <div class="mb-3">
+                    <iframe width="250" height="250" src="{{ watched_video.url }}" title="{{ watched_video.title }}" allowfullscreen class="border rounded w-100"></iframe>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Cache History -->
+    <div class="card">
+        <div class="card-header">
+            Recently Watched (LRU Cache)
+        </div>
+        <ul class="list-group list-group-flush">
+            {% for vid, data in history %}
+                <li class="list-group-item">
+                    <strong>{{ data.title }}</strong> — {{ data.duration }}
+                </li>
+            {% else %}
+                <li class="list-group-item text-muted">No videos watched yet.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>
